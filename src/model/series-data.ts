@@ -6,9 +6,20 @@ export interface HistogramPlotRow extends PlotRow {
 	readonly color?: string;
 }
 
+export interface HeatmapPlotRowItem {
+ value: number;
+ intensity?: number;
+ color?: string;
+}
+
+export interface HeatmapPlotRow extends PlotRow {
+	readonly values: HeatmapPlotRowItem[];
+}
+
 export interface SeriesPlotRowTypeAtTypeMap {
 	Bar: PlotRow;
 	Candlestick: PlotRow;
+	Heatmap: HeatmapPlotRow;
 	Area: PlotRow;
 	Line: PlotRow;
 	Histogram: HistogramPlotRow;

@@ -42,6 +42,7 @@ export class PaneRendererCandlesticks implements IPaneRenderer {
 			return;
 		}
 
+
 		// now we know pixelRatio and we could calculate barWidth effectively
 		this._barWidth = optimalCandlestickWidth(this._data.barSpacing, pixelRatio);
 

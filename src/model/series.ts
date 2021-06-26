@@ -10,6 +10,7 @@ import { isInteger, merge } from '../helpers/strict-type-checks';
 import { SeriesAreaPaneView } from '../views/pane/area-pane-view';
 import { SeriesBarsPaneView } from '../views/pane/bars-pane-view';
 import { SeriesCandlesticksPaneView } from '../views/pane/candlesticks-pane-view';
+import { SeriesHeatmapPaneView } from '../views/pane/heatmap-pane-view';
 import { SeriesHistogramPaneView } from '../views/pane/histogram-pane-view';
 import { IPaneView } from '../views/pane/ipane-view';
 import { IUpdatablePaneView } from '../views/pane/iupdatable-pane-view';
@@ -82,6 +83,7 @@ export interface MarkerData {
 export interface SeriesDataAtTypeMap {
 	Bar: BarPrices;
 	Candlestick: BarPrices;
+	Heatmap: BarPrice;
 	Area: BarPrice;
 	Line: BarPrice;
 	Histogram: BarPrice;
@@ -590,6 +592,11 @@ export class Series<T extends SeriesType = SeriesType> extends PriceDataSource i
 
 			case 'Area': {
 				this._paneView = new SeriesAreaPaneView(this as Series<'Area'>, this.model());
+				break;
+			}
+
+			case 'Heatmap': {
+				this._paneView = new SeriesHeatmapPaneView(this as Series<'Heatmap'>, this.model());
 				break;
 			}
 

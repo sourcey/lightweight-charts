@@ -2,6 +2,7 @@ import {
 	AreaStyleOptions,
 	BarStyleOptions,
 	CandlestickStyleOptions,
+	HeatmapStyleOptions,
 	HistogramStyleOptions,
 	LineStyleOptions,
 	PriceLineSource,
@@ -51,6 +52,10 @@ export const areaStyleDefaults: AreaStyleOptions = {
 	crosshairMarkerRadius: 4,
 	crosshairMarkerBorderColor: '',
 	crosshairMarkerBackgroundColor: '',
+};
+
+export const heatmapStyleDefaults: HeatmapStyleOptions = {
+	color: '#26a69a'
 };
 
 export const histogramStyleDefaults: HistogramStyleOptions = {

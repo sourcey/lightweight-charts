@@ -7,6 +7,7 @@ import {
 	AreaStyleOptions,
 	BarStyleOptions,
 	CandlestickStyleOptions,
+	HeatmapStyleOptions,
 	HistogramStyleOptions,
 	LineStyleOptions,
 } from './series-options';
@@ -54,6 +55,9 @@ export class SeriesBarColorer {
 
 			case 'Candlestick':
 				return this._candleStyle(seriesOptions as CandlestickStyleOptions, barIndex, precomputedBars);
+
+			case 'Heatmap':
+				return this._heatmapStyle(seriesOptions as HeatmapStyleOptions);
 
 			case 'Histogram':
 				return this._histogramStyle(seriesOptions as HistogramStyleOptions, barIndex, precomputedBars);
@@ -104,6 +108,13 @@ export class SeriesBarColorer {
 		return {
 			...emptyResult,
 			barColor: areaStyle.lineColor,
+		};
+	}
+
+	private _heatmapStyle(heatmapStyle: HeatmapStyleOptions): BarColorerStyle {
+		return {
+			...emptyResult,
+			barColor: heatmapStyle.color,
 		};
 	}
 

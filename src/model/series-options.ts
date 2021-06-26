@@ -79,6 +79,26 @@ export interface AreaStyleOptions {
 	crosshairMarkerBackgroundColor: string;
 }
 
+export interface HeatmapStyleOptions {
+	// positiveColor: string;
+	// negativeColor: string;
+	// higherLineColor: string;
+	// higherLineStyle: LineStyle;
+	// higherLineWidth: LineWidth;
+	// higherLineType: LineType;
+	// lowerLineColor: string;
+	// lowerLineStyle: LineStyle;
+	// lowerLineWidth: LineWidth;
+	// lowerLineType: LineType;
+	// crosshairMarkerVisible: boolean;
+	// crosshairMarkerRadius: number;
+	// crosshairMarkerBorderColor: string;
+	// crosshairMarkerBackgroundColor: string;
+	color: string;
+	// base: number;
+	// values: HeatmapPricedValue[];
+}
+
 export interface HistogramStyleOptions {
 	color: string;
 	base: number;
@@ -230,6 +250,12 @@ export type AreaSeriesOptions = SeriesOptions<AreaStyleOptions>;
 export type AreaSeriesPartialOptions = SeriesPartialOptions<AreaStyleOptions>;
 
 /**
+ * Structure describing closed area series options.
+ */
+export type HeatmapSeriesOptions = SeriesOptions<HeatmapStyleOptions>;
+export type HeatmapSeriesPartialOptions = SeriesPartialOptions<HeatmapStyleOptions>;
+
+/**
  * Structure describing bar series options.
  */
 export type BarSeriesOptions = SeriesOptions<BarStyleOptions>;
@@ -256,6 +282,7 @@ export type LineSeriesPartialOptions = SeriesPartialOptions<LineStyleOptions>;
 export interface SeriesOptionsMap {
 	Bar: BarSeriesOptions;
 	Candlestick: CandlestickSeriesOptions;
+	Heatmap: HeatmapSeriesOptions;
 	Area: AreaSeriesOptions;
 	Line: LineSeriesOptions;
 	Histogram: HistogramSeriesOptions;
@@ -264,6 +291,7 @@ export interface SeriesOptionsMap {
 export interface SeriesPartialOptionsMap {
 	Bar: BarSeriesPartialOptions;
 	Candlestick: CandlestickSeriesPartialOptions;
+	Heatmap: HeatmapSeriesPartialOptions;
 	Area: AreaSeriesPartialOptions;
 	Line: LineSeriesPartialOptions;
 	Histogram: HistogramSeriesPartialOptions;

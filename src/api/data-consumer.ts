@@ -2,7 +2,9 @@ import { isNumber, isString } from '../helpers/strict-type-checks';
 
 import { Series } from '../model/series';
 import { SeriesType } from '../model/series-options';
+import { HeatmapPlotRowItem } from '../model/series-data';
 import { BusinessDay, UTCTimestamp } from '../model/time-data';
+
 
 export type Time = UTCTimestamp | BusinessDay | string;
 
@@ -34,6 +36,16 @@ export interface LineData {
 }
 
 /**
+ * Structure describing single data item for series of type Line or Area
+ */
+export interface HeatmapData {
+	time: Time;
+
+	value: number;
+	values: HeatmapPlotRowItem[];
+}
+
+/**
  * Structure describing a single item of data for histogram series
  */
 export interface HistogramData extends LineData {
@@ -54,16 +66,19 @@ export interface BarData {
 
 export function isWhitespaceData(data: SeriesDataItemTypeMap[SeriesType]): data is WhitespaceData {
 	return (data as Partial<BarData>).open === undefined && (data as Partial<LineData>).value === undefined;
+	// return ((data as Partial<HeatmapData>).lowerValue === undefined || (data as Partial<HeatmapData>).lowerValue === undefined) && (data as Partial<BarData>).open === undefined && (data as Partial<LineData>).value === undefined;
 }
 
 export function isFulfilledData(data: SeriesDataItemTypeMap[SeriesType]): data is (BarData | LineData | HistogramData) {
 	return (data as Partial<BarData>).open !== undefined || (data as Partial<LineData>).value !== undefined;
+	// return ((data as Partial<HeatmapData>).lowerValue !== undefined && (data as Partial<HeatmapData>).lowerValue !== undefined) || (data as Partial<BarData>).open !== undefined || (data as Partial<LineData>).value !== undefined;
 }
 
 export interface SeriesDataItemTypeMap {
 	Bar: BarData | WhitespaceData;
 	Candlestick: BarData | WhitespaceData;
 	Area: LineData | WhitespaceData;
+	Heatmap: HeatmapData | WhitespaceData;
 	Line: LineData | WhitespaceData;
 	Histogram: HistogramData | WhitespaceData;
 }

@@ -31,6 +31,7 @@ import { RangeImpl } from './range-impl';
 import { sortSources } from './sort-sources';
 import { SeriesItemsIndexesRange, TimePointIndex } from './time-data';
 
+
 /**
  * Enum of possible price scale modes
  * Normal mode displays original price values
@@ -59,6 +60,15 @@ export interface PriceMark {
 export interface PricedValue {
 	price: BarPrice;
 	y: Coordinate;
+}
+
+export interface HeatmapPricedValueItem extends PricedValue {
+	intensity?: number;
+	color?: string;
+}
+
+export interface HeatmapPricedValue {
+	values: Array<HeatmapPricedValueItem>;
 }
 
 /** Defines margins of the price scale */

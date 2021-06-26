@@ -16,6 +16,8 @@ import {
 	CandlestickSeriesOptions,
 	CandlestickSeriesPartialOptions,
 	fillUpDownCandlesticksColors,
+	HeatmapSeriesOptions,
+	HeatmapSeriesPartialOptions,
 	HistogramSeriesOptions,
 	HistogramSeriesPartialOptions,
 	LineSeriesOptions,
@@ -38,6 +40,7 @@ import {
 	areaStyleDefaults,
 	barStyleDefaults,
 	candlestickStyleDefaults,
+	heatmapStyleDefaults,
 	histogramStyleDefaults,
 	lineStyleDefaults,
 	seriesOptionsDefaults,
@@ -191,6 +194,21 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 
 	public resize(width: number, height: number, forceRepaint?: boolean): void {
 		this._chartWidget.resize(width, height, forceRepaint);
+	}
+
+	// sourcey
+	public addHeatmapSeries(options: HeatmapSeriesPartialOptions = {}): ISeriesApi<'Heatmap'> {
+		options = migrateOptions(options);
+		patchPriceFormat(options.priceFormat);
+
+		const strictOptions = merge(clone(seriesOptionsDefaults), heatmapStyleDefaults, options) as HeatmapSeriesOptions;
+		const series = this._chartWidget.model().createSeries('Heatmap', strictOptions);
+
+		const res = new SeriesApi<'Heatmap'>(series, this, this);
+		this._seriesMap.set(res, series);
+		this._seriesMapReversed.set(series, res);
+
+		return res;
 	}
 
 	public addAreaSeries(options: AreaSeriesPartialOptions = {}): ISeriesApi<'Area'> {

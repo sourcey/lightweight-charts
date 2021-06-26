@@ -8,6 +8,7 @@ import {
 	AreaSeriesPartialOptions,
 	BarSeriesPartialOptions,
 	CandlestickSeriesPartialOptions,
+	HeatmapSeriesPartialOptions,
 	HistogramSeriesPartialOptions,
 	LineSeriesPartialOptions,
 	SeriesType,
@@ -47,6 +48,14 @@ export interface IChartApi {
 	 */
 	resize(width: number, height: number, forceRepaint?: boolean): void;
 
+	/**
+	 * Creates an heatmap area series with specified parameters
+	 *
+	 * @param areaOptions - customization parameters of the series being created
+	 * @returns an interface of the created series
+	 */
+	addHeatmapSeries(areaOptions?: HeatmapSeriesPartialOptions): ISeriesApi<'Heatmap'>;
+	
 	/**
 	 * Creates an area series with specified parameters
 	 *
