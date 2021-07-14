@@ -30,6 +30,7 @@ export interface PriceAxisViewRendererOptions {
 	paddingOuter: number;
 	paddingTop: number;
 	tickLength: number;
+	minWidth: number;
 }
 
 export interface IPriceAxisViewRenderer {

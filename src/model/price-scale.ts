@@ -108,6 +108,7 @@ export interface PriceScaleOptions {
 	visible: boolean;
 	/** True value add a small horizontal ticks on price axis labels */
 	drawTicks: boolean;
+	minWidth: number;
 }
 
 interface RangeCache {

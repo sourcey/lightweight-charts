@@ -13,5 +13,6 @@ export const priceScaleOptionsDefaults: PriceScaleOptions = {
 	scaleMargins: {
 		bottom: 0.1,
 		top: 0.2,
-	}
+	},
+	minWidth: 0
 };

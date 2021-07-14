@@ -24,6 +24,7 @@ export class PriceAxisRendererOptionsProvider {
 		paddingOuter: 0,
 		paddingTop: 0,
 		baselineOffset: 0,
+		minWidth: 0
 	};
 
 	public constructor(chartModel: ChartModel) {
@@ -51,6 +52,7 @@ export class PriceAxisRendererOptionsProvider {
 		}
 
 		rendererOptions.color = this._textColor();
+		rendererOptions.minWidth = this._minWidth();
 
 		return this._rendererOptions;
 	}
@@ -65,5 +67,9 @@ export class PriceAxisRendererOptionsProvider {
 
 	private _fontFamily(): string {
 		return this._chartModel.options().layout.fontFamily;
+	}
+
+	private _minWidth(): number {
+		return this._chartModel.options().rightPriceScale.minWidth;
 	}
 }
