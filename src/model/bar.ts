@@ -17,3 +17,13 @@ export interface BarCoordinates {
 	lowY: Coordinate;
 	closeY: Coordinate;
 }
+
+export interface BandPrices {
+	upper: BarPrice;
+	lower: BarPrice;
+}
+
+export interface BandCoordinates {
+	upperY: Coordinate;
+	lowerY: Coordinate;
+}

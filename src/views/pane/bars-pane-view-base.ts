@@ -14,7 +14,7 @@ import { BarCandlestickItemBase } from '../../renderers/bars-renderer';
 
 import { SeriesPaneViewBase } from './series-pane-view-base';
 
-export abstract class BarsPaneViewBase<TSeriesType extends 'Bar' | 'Candlestick', ItemType extends BarCandlestickItemBase> extends SeriesPaneViewBase<TSeriesType, ItemType> {
+export abstract class BarsPaneViewBase<TSeriesType extends 'Bar' | 'Candlestick' | 'Footprint', ItemType extends BarCandlestickItemBase> extends SeriesPaneViewBase<TSeriesType, ItemType> {
 	public constructor(series: Series<TSeriesType>, model: ChartModel) {
 		super(series, model, false);
 	}

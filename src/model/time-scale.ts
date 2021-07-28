@@ -78,6 +78,7 @@ export interface TimeScaleOptions {
 	timeVisible: boolean;
 	secondsVisible: boolean;
 	shiftVisibleRangeOnNewBar: boolean;
+	scrollFromCenter:  boolean;
 	tickMarkFormatter?: TickMarkFormatter;
 }
 
@@ -100,6 +101,9 @@ export class TimeScale {
 
 	private _visibleRange: TimeScaleVisibleRange = TimeScaleVisibleRange.invalid();
 	private _visibleRangeInvalidated: boolean = true;
+
+	private _zoomStartVisibleRange: TimeScaleVisibleRange = TimeScaleVisibleRange.invalid();
+	private _zoomStartTimeout: number | null = null;
 
 	private readonly _visibleBarsChanged: Delegate = new Delegate();
 	private readonly _logicalRangeChanged: Delegate = new Delegate();
@@ -422,17 +426,56 @@ export class TimeScale {
 	 * Negative value means zoom out, positive - zoom in.
 	 */
 	public zoom(zoomPoint: Coordinate, scale: number): void {
-		const floatIndexAtZoomPoint = this._coordinateToFloatIndex(zoomPoint);
 
-		const barSpacing = this.barSpacing();
-		const newBarSpacing = barSpacing + scale * (barSpacing / 10);
+		// Custom setting: zoom from the enter of the chart not the mouse
+		if (this._options.scrollFromCenter) {
+			const barSpacing = this.barSpacing();
+			const newBarSpacing = barSpacing + scale * (barSpacing / 10);
+			const prevVisibleRange = this._visibleRange.logicalRange();
 
-		// zoom in/out bar spacing
-		this.setBarSpacing(newBarSpacing);
+			if (!this._zoomStartVisibleRange.logicalRange()) {
+				this._zoomStartVisibleRange = new TimeScaleVisibleRange(this._visibleRange.logicalRange())
+			}
 
-		if (!this._options.rightBarStaysOnScroll) {
-			// and then correct right offset to move index under zoomPoint back to its coordinate
-			this.setRightOffset(this.rightOffset() + (floatIndexAtZoomPoint - this._coordinateToFloatIndex(zoomPoint)));
+			if (this._zoomStartTimeout) {
+				clearTimeout(this._zoomStartTimeout);
+				this._zoomStartTimeout = null;
+			}
+			this._zoomStartTimeout = setTimeout(() => {
+				this._zoomStartVisibleRange = TimeScaleVisibleRange.invalid();
+			}, 100);
+
+			// zoom in/out bar spacing
+			this.setBarSpacing(newBarSpacing);
+
+			if (!this._options.rightBarStaysOnScroll) {
+				const zoomStartVisibleRange = this._zoomStartVisibleRange.logicalRange()
+				const newVisibleRange = this._visibleRange.logicalRange()
+				if (newVisibleRange && prevVisibleRange && zoomStartVisibleRange) {
+					const startLeft = zoomStartVisibleRange.left();
+					const startRight = zoomStartVisibleRange.right();
+					const newLeft = newVisibleRange.left();
+					const newRight = newVisibleRange.right();
+					const delta = (newRight - newLeft) - (startRight - startLeft);
+					this.setVisibleRange(new RangeImpl(
+						startLeft - (delta / 2) as number as TimePointIndex,
+						startRight + (delta / 2) as number as TimePointIndex));
+				}
+			}
+		}
+		else {
+			const floatIndexAtZoomPoint = this._coordinateToFloatIndex(zoomPoint);
+
+			const barSpacing = this.barSpacing();
+			const newBarSpacing = barSpacing + scale * (barSpacing / 10);
+
+			// zoom in/out bar spacing
+			this.setBarSpacing(newBarSpacing);
+
+			if (!this._options.rightBarStaysOnScroll) {
+				// and then correct right offset to move index under zoomPoint back to its coordinate
+				this.setRightOffset(this.rightOffset() + (floatIndexAtZoomPoint - this._coordinateToFloatIndex(zoomPoint)));
+			}
 		}
 	}
 
@@ -658,6 +701,9 @@ export class TimeScale {
 
 		const logicalRange = new RangeImpl(leftBorder as Logical, rightBorder as Logical);
 		this._setVisibleRange(new TimeScaleVisibleRange(logicalRange));
+
+		// leftBorder = # bars in decimal from the edge of the viewport
+		// console.log('_setVisibleRange', leftBorder, rightBorder, newBarsLength)
 	}
 
 	private _correctBarSpacing(): void {

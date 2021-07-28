@@ -34,6 +34,7 @@ export interface MouseEventParamsImpl {
 
 export type MouseEventParamsImplSupplier = () => MouseEventParamsImpl;
 
+// let _started = false
 export class ChartWidget implements IDestroyable {
 	private readonly _options: ChartOptionsInternal;
 	private _paneWidgets: PaneWidget[] = [];
@@ -430,6 +431,22 @@ export class ChartWidget implements IDestroyable {
 			const zoomScale = Math.sign(deltaY) * Math.min(1, Math.abs(deltaY));
 			const scrollPosition = event.clientX - this._element.getBoundingClientRect().left;
 			this.model().zoomTime(scrollPosition as Coordinate, zoomScale);
+
+			// Custom behaviour: scale price and time on mouse wheel
+			const defaultPriceScale = this.model().findPriceScale(this.model().defaultVisiblePriceScaleId())
+			if (defaultPriceScale) {
+				const priceScale = defaultPriceScale.priceScale;
+				const priceRange = priceScale.priceRange()
+				if (priceRange) {
+					priceScale.setMode({
+						autoScale: false,
+					});
+
+					const newPriceRange = ensureNotNull(priceRange).clone();
+					newPriceRange.scaleAroundCenter(zoomScale > 0 ? 0.9 : 1.1);
+					priceScale.setPriceRange(newPriceRange);
+				}
+			}
 		}
 
 		if (deltaX !== 0 && this._options.handleScroll.mouseWheel) {

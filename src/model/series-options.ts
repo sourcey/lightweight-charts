@@ -79,29 +79,37 @@ export interface AreaStyleOptions {
 	crosshairMarkerBackgroundColor: string;
 }
 
-export interface HeatmapStyleOptions {
-	// positiveColor: string;
-	// negativeColor: string;
-	// higherLineColor: string;
-	// higherLineStyle: LineStyle;
-	// higherLineWidth: LineWidth;
-	// higherLineType: LineType;
-	// lowerLineColor: string;
-	// lowerLineStyle: LineStyle;
-	// lowerLineWidth: LineWidth;
-	// lowerLineType: LineType;
-	// crosshairMarkerVisible: boolean;
-	// crosshairMarkerRadius: number;
-	// crosshairMarkerBorderColor: string;
-	// crosshairMarkerBackgroundColor: string;
-	color: string;
-	// base: number;
-	// values: HeatmapPricedValue[];
-}
-
 export interface HistogramStyleOptions {
 	color: string;
 	base: number;
+}
+
+export interface HeatmapStyleOptions {
+	color: string;
+	alpha: number;
+	blockSizeY: number;
+	colors: Array<string>;
+	thresholds: Array<number>;
+}
+
+export interface FootprintStyleOptions { // extends CandlestickStyleOptions
+	alignEdges: boolean;
+
+	candleUpColor: string;
+	candleDownColor: string;
+	candleWickVisible: boolean;
+	candleBorderVisible: boolean;
+	candleBodyVisible: boolean;
+
+	clusterVisible: boolean;
+	clusterColor: string;
+	clusterTextColor: string;
+	clusterTextType: string;
+	clusterType: string;
+	clusterSizeY: number;
+	clusterBuyColors: Array<string>;
+	clusterSellColors: Array<string>;
+	clusterThresholds: Array<number>;
 }
 
 /**
@@ -250,12 +258,6 @@ export type AreaSeriesOptions = SeriesOptions<AreaStyleOptions>;
 export type AreaSeriesPartialOptions = SeriesPartialOptions<AreaStyleOptions>;
 
 /**
- * Structure describing closed area series options.
- */
-export type HeatmapSeriesOptions = SeriesOptions<HeatmapStyleOptions>;
-export type HeatmapSeriesPartialOptions = SeriesPartialOptions<HeatmapStyleOptions>;
-
-/**
  * Structure describing bar series options.
  */
 export type BarSeriesOptions = SeriesOptions<BarStyleOptions>;
@@ -279,22 +281,36 @@ export type HistogramSeriesPartialOptions = SeriesPartialOptions<HistogramStyleO
 export type LineSeriesOptions = SeriesOptions<LineStyleOptions>;
 export type LineSeriesPartialOptions = SeriesPartialOptions<LineStyleOptions>;
 
+/**
+ * Structure describing closed area series options.
+ */
+export type HeatmapSeriesOptions = SeriesOptions<HeatmapStyleOptions>;
+export type HeatmapSeriesPartialOptions = SeriesPartialOptions<HeatmapStyleOptions>;
+
+/**
+ * Structure describing closed area series options.
+ */
+export type FootprintSeriesOptions = SeriesOptions<FootprintStyleOptions>;
+export type FootprintSeriesPartialOptions = SeriesPartialOptions<FootprintStyleOptions>;
+
 export interface SeriesOptionsMap {
 	Bar: BarSeriesOptions;
 	Candlestick: CandlestickSeriesOptions;
-	Heatmap: HeatmapSeriesOptions;
 	Area: AreaSeriesOptions;
 	Line: LineSeriesOptions;
 	Histogram: HistogramSeriesOptions;
+	Heatmap: HeatmapSeriesOptions;
+	Footprint: FootprintSeriesOptions;
 }
 
 export interface SeriesPartialOptionsMap {
 	Bar: BarSeriesPartialOptions;
 	Candlestick: CandlestickSeriesPartialOptions;
-	Heatmap: HeatmapSeriesPartialOptions;
 	Area: AreaSeriesPartialOptions;
 	Line: LineSeriesPartialOptions;
 	Histogram: HistogramSeriesPartialOptions;
+	Heatmap: HeatmapSeriesPartialOptions;
+	Footprint: FootprintSeriesPartialOptions;
 }
 
 export type SeriesType = keyof SeriesOptionsMap;

@@ -7,22 +7,32 @@ export interface HistogramPlotRow extends PlotRow {
 }
 
 export interface HeatmapPlotRowItem {
- value: number;
- intensity?: number;
- color?: string;
+  price: number;
+  value: number;
 }
 
 export interface HeatmapPlotRow extends PlotRow {
 	readonly values: HeatmapPlotRowItem[];
 }
 
+export interface FootprintPlotRowItem {
+  price: number;
+  vbuy: number;
+  vsell: number;
+}
+
+export interface FootprintPlotRow extends PlotRow {
+	readonly values: FootprintPlotRowItem[];
+}
+
 export interface SeriesPlotRowTypeAtTypeMap {
 	Bar: PlotRow;
 	Candlestick: PlotRow;
-	Heatmap: HeatmapPlotRow;
 	Area: PlotRow;
 	Line: PlotRow;
 	Histogram: HistogramPlotRow;
+	Heatmap: HeatmapPlotRow;
+	Footprint: FootprintPlotRow;
 }
 
 export type SeriesPlotRow<T extends SeriesType = SeriesType> = SeriesPlotRowTypeAtTypeMap[T];

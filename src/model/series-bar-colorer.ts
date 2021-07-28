@@ -7,9 +7,10 @@ import {
 	AreaStyleOptions,
 	BarStyleOptions,
 	CandlestickStyleOptions,
-	HeatmapStyleOptions,
 	HistogramStyleOptions,
 	LineStyleOptions,
+	HeatmapStyleOptions,
+	FootprintStyleOptions
 } from './series-options';
 import { TimePointIndex } from './time-data';
 
@@ -56,11 +57,14 @@ export class SeriesBarColorer {
 			case 'Candlestick':
 				return this._candleStyle(seriesOptions as CandlestickStyleOptions, barIndex, precomputedBars);
 
+			case 'Histogram':
+				return this._histogramStyle(seriesOptions as HistogramStyleOptions, barIndex, precomputedBars);
+
 			case 'Heatmap':
 				return this._heatmapStyle(seriesOptions as HeatmapStyleOptions);
 
-			case 'Histogram':
-				return this._histogramStyle(seriesOptions as HistogramStyleOptions, barIndex, precomputedBars);
+			case 'Footprint':
+				return this._footprintStyle(seriesOptions as FootprintStyleOptions, barIndex, precomputedBars);
 		}
 
 		throw new Error('Unknown chart style');
@@ -111,13 +115,6 @@ export class SeriesBarColorer {
 		};
 	}
 
-	private _heatmapStyle(heatmapStyle: HeatmapStyleOptions): BarColorerStyle {
-		return {
-			...emptyResult,
-			barColor: heatmapStyle.color,
-		};
-	}
-
 	private _lineStyle(lineStyle: LineStyleOptions): BarColorerStyle {
 		return {
 			...emptyResult,
@@ -130,6 +127,56 @@ export class SeriesBarColorer {
 		const currentBar = ensureNotNull(this._findBar(barIndex, precomputedBars)) as SeriesPlotRow<'Histogram'>;
 		result.barColor = currentBar.color !== undefined ? currentBar.color : histogramStyle.color;
 		return result;
+	}
+
+	private _heatmapStyle(heatmapStyle: HeatmapStyleOptions): BarColorerStyle {
+		return {
+			...emptyResult,
+			barColor: heatmapStyle.color,
+		};
+	}
+
+	private _footprintStyle(footprintStyle: FootprintStyleOptions, barIndex: TimePointIndex, precomputedBars?: PrecomputedBars): BarColorerStyle {
+		const result: BarColorerStyle = { ...emptyResult };
+
+		// candleUpColor: string;
+		// candleDownColor: string;
+		// candleWickVisible: boolean;
+		// candleBorderVisible: boolean;
+		// candleBodyVisible: boolean;
+		//
+		// clusterColor: string;
+		// clusterTextColor: string;
+		// clusterTextType: string;
+		// clusterType: string;
+		// clusterSizeY: number;
+		// clusterBuyColors: Array<string>;
+		// clusterSellColors: Array<string>;
+		// clusterThresholds: Array<number>;
+
+		const upColor = footprintStyle.candleUpColor;
+		const downColor = footprintStyle.candleDownColor;
+		// const borderUpColor = footprintStyle.borderUpColor;
+		// const borderDownColor = footprintStyle.borderDownColor;
+		//
+		// const wickUpColor = footprintStyle.wickUpColor;
+		// const wickDownColor = footprintStyle.wickDownColor;
+
+		const currentBar = ensureNotNull(this._findBar(barIndex, precomputedBars));
+		const isUp = ensure(currentBar.value[PlotRowValueIndex.Open]) <= ensure(currentBar.value[PlotRowValueIndex.Close]);
+
+		result.barColor = isUp ? upColor : downColor;
+		// result.clusterColor = footprintStyle.clusterColor;
+		// isUp ? upColor : downColor;
+
+		// result.barBorderColor = isUp ? borderUpColor : borderDownColor;
+		// result.barWickColor = isUp ? wickUpColor : wickDownColor;
+
+		return result;
+		// return {
+		// 	...emptyResult,
+		// 	barColor: footprintStyle.color,
+		// };
 	}
 
 	private _findBar(barIndex: TimePointIndex, precomputedBars?: PrecomputedBars): SeriesPlotRow | null {

@@ -7,7 +7,7 @@ import { Delegate } from '../helpers/delegate';
 import { ISubscription } from '../helpers/isubscription';
 import { DeepPartial, merge } from '../helpers/strict-type-checks';
 
-import { BarCoordinates, BarPrice, BarPrices } from './bar';
+import { BarCoordinates, BarPrice, BarPrices, BandCoordinates, BandPrices } from './bar';
 import { Coordinate } from './coordinate';
 import { FirstValue, IPriceDataSource } from './iprice-data-source';
 import { LayoutOptions } from './layout-options';
@@ -63,8 +63,7 @@ export interface PricedValue {
 }
 
 export interface HeatmapPricedValueItem extends PricedValue {
-	intensity?: number;
-	color?: string;
+	value: number;
 }
 
 export interface HeatmapPricedValue {
@@ -427,6 +426,42 @@ export class PriceScale {
 			invCoordinate = bh + hmm * (closeLogical - min);
 			coordinate = isInverted ? invCoordinate : this._height - 1 - invCoordinate;
 			bar.closeY = coordinate as Coordinate;
+		}
+	}
+
+	public barBandsToCoordinates<T extends BandPrices & BandCoordinates>(pricesList: T[], baseValue: number, visibleRange?: SeriesItemsIndexesRange): void {
+		this._makeSureItIsValid();
+		const bh = this._bottomMarginPx();
+		const range = ensureNotNull(this.priceRange());
+		const min = range.minValue();
+		const max = range.maxValue();
+		const ih = (this.internalHeight() - 1);
+		const isInverted = this.isInverted();
+
+		const hmm = ih / (max - min);
+
+		const fromIndex = (visibleRange === undefined) ? 0 : visibleRange.from;
+		const toIndex = (visibleRange === undefined) ? pricesList.length : visibleRange.to;
+
+		const transformFn = this._getCoordinateTransformer();
+		for (let i = fromIndex; i < toIndex; i++) {
+			const bar = pricesList[i];
+
+			let upperLogical = bar.upper;
+			let lowerLogical = bar.lower;
+
+			if (transformFn !== null) {
+				upperLogical = transformFn(bar.upper, baseValue) as BarPrice;
+				lowerLogical = transformFn(bar.lower, baseValue) as BarPrice;
+			}
+
+			let invCoordinate = bh + hmm * (upperLogical - min);
+			let coordinate = isInverted ? invCoordinate : this._height - 1 - invCoordinate;
+			bar.upperY = coordinate as Coordinate;
+
+			invCoordinate = bh + hmm * (lowerLogical - min);
+			coordinate = isInverted ? invCoordinate : this._height - 1 - invCoordinate;
+			bar.lowerY = coordinate as Coordinate;
 		}
 	}
 

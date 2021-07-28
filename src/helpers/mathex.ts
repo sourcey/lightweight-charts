@@ -56,3 +56,45 @@ export function ceiledOdd(x: number): number {
 	const ceiled = Math.ceil(x);
 	return (ceiled % 2 === 0) ? ceiled - 1 : ceiled;
 }
+
+export function roundUp(num: number, acc: number): number {
+  return Math.ceil(num/acc) * acc;
+}
+
+export function roundDown(num: number, acc: number): number {
+  return Math.floor(num/acc) * acc;
+}
+
+export function roundNearest(num: number, acc: number): number {
+  if (acc < 0) {
+    return Math.round(num*acc) / acc
+  } else {
+    return Math.round(num/acc) * acc
+  }
+}
+
+export function formatAmount(amount: number, decimals: number = 0, precision: number = 0): string {
+  const negative = amount < 0
+
+  amount = Math.ceil(Math.abs(amount) * 1000000000) / 1000000000
+
+	let res = ''
+  if (amount >= 1000000) {
+    res = +(amount / 1000000).toFixed(isNaN(decimals) ? 1 : decimals) + 'M'
+  } else if (amount >= 100000) {
+    res = +(amount / 1000).toFixed(isNaN(decimals) ? 0 : decimals) + 'K'
+  } else if (amount >= 1000) {
+    res = +(amount / 1000).toFixed(isNaN(decimals) ? 1 : decimals) + 'K'
+  } else if (precision) {
+    res = amount.toFixed(precision)
+  } else {
+    // res = +amount.toFixed(4)
+    res = amount.toFixed(2)
+  }
+
+  if (negative) {
+    return '-' + res
+  } else {
+    return res
+  }
+}

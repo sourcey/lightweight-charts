@@ -3,7 +3,7 @@ import { SeriesPlotRow } from '../model/series-data';
 import { SeriesType } from '../model/series-options';
 import { TimePoint, TimePointIndex } from '../model/time-data';
 
-import { BarData, HeatmapData, HistogramData, isWhitespaceData, LineData, SeriesDataItemTypeMap } from './data-consumer';
+import { BarData, HistogramData, isWhitespaceData, LineData, HeatmapData, FootprintData, SeriesDataItemTypeMap } from './data-consumer';
 
 function getLineBasedSeriesPlotRow(time: TimePoint, index: TimePointIndex, item: LineData | HistogramData): Mutable<SeriesPlotRow<'Line' | 'Histogram'>> {
 	const val = item.value;
@@ -33,6 +33,10 @@ function getHeatmapBasedSeriesPlotRow(time: TimePoint, index: TimePointIndex, it
 	return { index, time, value: [item.value, item.value, item.value, item.value], values: item.values };
 }
 
+function getFootprintBasedSeriesPlotRow(time: TimePoint, index: TimePointIndex, item: FootprintData): Mutable<SeriesPlotRow<'Footprint'>> {
+	return { index, time, value: [item.open, item.high, item.low, item.close], values: item.values };
+}
+
 // we want to have compile-time checks that the type of the functions is correct
 // but due contravariance we cannot easily use type of values of the SeriesItemValueFnMap map itself
 // so let's use TimedSeriesItemValueFn for shut up the compiler in seriesItemValueFn
@@ -43,7 +47,7 @@ type SeriesItemValueFnMap = {
 
 export type TimedSeriesItemValueFn = (time: TimePoint, index: TimePointIndex, item: SeriesDataItemTypeMap[SeriesType]) => Mutable<SeriesPlotRow | WhitespacePlotRow>;
 
-function wrapWhitespaceData(createPlotRowFn: (typeof getLineBasedSeriesPlotRow) | (typeof getOHLCBasedSeriesPlotRow) | (typeof getHeatmapBasedSeriesPlotRow)): TimedSeriesItemValueFn {
+function wrapWhitespaceData(createPlotRowFn: (typeof getLineBasedSeriesPlotRow) | (typeof getOHLCBasedSeriesPlotRow) | (typeof getHeatmapBasedSeriesPlotRow) | (typeof getFootprintBasedSeriesPlotRow)): TimedSeriesItemValueFn {
 	return (time: TimePoint, index: TimePointIndex, bar: SeriesDataItemTypeMap[SeriesType]) => {
 		if (isWhitespaceData(bar)) {
 			return { time, index };
@@ -57,9 +61,10 @@ const seriesPlotRowFnMap: SeriesItemValueFnMap = {
 	Candlestick: wrapWhitespaceData(getOHLCBasedSeriesPlotRow),
 	Bar: wrapWhitespaceData(getOHLCBasedSeriesPlotRow),
 	Area: wrapWhitespaceData(getLineBasedSeriesPlotRow),
-	Heatmap: wrapWhitespaceData(getHeatmapBasedSeriesPlotRow),
 	Histogram: wrapWhitespaceData(getLineBasedSeriesPlotRow),
 	Line: wrapWhitespaceData(getLineBasedSeriesPlotRow),
+	Heatmap: wrapWhitespaceData(getHeatmapBasedSeriesPlotRow),
+	Footprint: wrapWhitespaceData(getFootprintBasedSeriesPlotRow),
 };
 
 export function getSeriesPlotRowCreator(seriesType: SeriesType): TimedSeriesItemValueFn {

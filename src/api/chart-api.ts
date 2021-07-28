@@ -16,12 +16,14 @@ import {
 	CandlestickSeriesOptions,
 	CandlestickSeriesPartialOptions,
 	fillUpDownCandlesticksColors,
-	HeatmapSeriesOptions,
-	HeatmapSeriesPartialOptions,
 	HistogramSeriesOptions,
 	HistogramSeriesPartialOptions,
 	LineSeriesOptions,
 	LineSeriesPartialOptions,
+	HeatmapSeriesOptions,
+	HeatmapSeriesPartialOptions,
+	FootprintSeriesOptions,
+	FootprintSeriesPartialOptions,
 	precisionByMinMove,
 	PriceFormat,
 	PriceFormatBuiltIn,
@@ -40,9 +42,10 @@ import {
 	areaStyleDefaults,
 	barStyleDefaults,
 	candlestickStyleDefaults,
-	heatmapStyleDefaults,
 	histogramStyleDefaults,
 	lineStyleDefaults,
+	heatmapStyleDefaults,
+	footprintStyleDefaults,
 	seriesOptionsDefaults,
 } from './options/series-options-defaults';
 import { PriceScaleApi } from './price-scale-api';
@@ -196,21 +199,6 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 		this._chartWidget.resize(width, height, forceRepaint);
 	}
 
-	// sourcey
-	public addHeatmapSeries(options: HeatmapSeriesPartialOptions = {}): ISeriesApi<'Heatmap'> {
-		options = migrateOptions(options);
-		patchPriceFormat(options.priceFormat);
-
-		const strictOptions = merge(clone(seriesOptionsDefaults), heatmapStyleDefaults, options) as HeatmapSeriesOptions;
-		const series = this._chartWidget.model().createSeries('Heatmap', strictOptions);
-
-		const res = new SeriesApi<'Heatmap'>(series, this, this);
-		this._seriesMap.set(res, series);
-		this._seriesMapReversed.set(series, res);
-
-		return res;
-	}
-
 	public addAreaSeries(options: AreaSeriesPartialOptions = {}): ISeriesApi<'Area'> {
 		options = migrateOptions(options);
 		patchPriceFormat(options.priceFormat);
@@ -276,6 +264,34 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 		const series = this._chartWidget.model().createSeries('Line', strictOptions);
 
 		const res = new SeriesApi<'Line'>(series, this, this);
+		this._seriesMap.set(res, series);
+		this._seriesMapReversed.set(series, res);
+
+		return res;
+	}
+
+	public addHeatmapSeries(options: HeatmapSeriesPartialOptions = {}): ISeriesApi<'Heatmap'> {
+		options = migrateOptions(options);
+		patchPriceFormat(options.priceFormat);
+
+		const strictOptions = merge(clone(seriesOptionsDefaults), heatmapStyleDefaults, options) as HeatmapSeriesOptions;
+		const series = this._chartWidget.model().createSeries('Heatmap', strictOptions);
+
+		const res = new SeriesApi<'Heatmap'>(series, this, this);
+		this._seriesMap.set(res, series);
+		this._seriesMapReversed.set(series, res);
+
+		return res;
+	}
+
+	public addFootprintSeries(options: FootprintSeriesPartialOptions = {}): ISeriesApi<'Footprint'> {
+		options = migrateOptions(options);
+		patchPriceFormat(options.priceFormat);
+
+		const strictOptions = merge(clone(seriesOptionsDefaults), footprintStyleDefaults, options) as FootprintSeriesOptions;
+		const series = this._chartWidget.model().createSeries('Footprint', strictOptions);
+
+		const res = new SeriesApi<'Footprint'>(series, this, this);
 		this._seriesMap.set(res, series);
 		this._seriesMapReversed.set(series, res);
 

@@ -5,20 +5,16 @@ import { SeriesItemsIndexesRange, TimedValue, TimePointIndex } from '../model/ti
 
 import { IPaneRenderer } from './ipane-renderer';
 
-// const showSpacingMinimalBarWidth = 1;
-// const alignToMinimalWidthLimit = 4;
-const bockHeight = 5;
-
 export type HeatmapItem = TimedValue & HeatmapPricedValue;
-// export interface HeatmapItem extends PricedValue, TimedValue {
-// 	color: string;
-// }
 
 export interface PaneRendererHeatmapData {
 	items: HeatmapItem[];
 
 	barSpacing: number;
-	// heatmapBase: number;
+	colors: Array<string>;
+	thresholds: Array<number>;
+	blockSizeY: number;
+	alpha: number;
 
 	visibleRange: SeriesItemsIndexesRange | null;
 }
@@ -53,18 +49,32 @@ export class PaneRendererHeatmap implements IPaneRenderer {
 			const current = this._precalculatedCache[i - this._data.visibleRange.from];
 
 			for (const value of item.values) {
-				ctx.fillStyle = value.color as string;
 				const highY = Math.round(value.y * pixelRatio);
 				const lowY = highY;
-				const top = highY + (bockHeight / 2);
-				let bottom = lowY - (bockHeight / 2);
+				const top = highY + (this._data.blockSizeY / 2);
+				let bottom = lowY - (this._data.blockSizeY / 2);
 
 				if (highY > 0 && lowY > 0) {
+					if (this._data.alpha) {
+						ctx.globalAlpha = this._data.alpha
+					}
+					ctx.fillStyle = this._barColor(value.value)
 					ctx.fillRect(current.left, top, current.right - current.left, bottom - top);
 				}
 			}
 		}
 	}
+
+	private _barColor(value: number): string {
+		if (this._data) {
+	    for (let i = this._data.thresholds.length - 1; i >= 0; i--) {
+	      if (value > this._data.thresholds[i]) {
+	        return this._data.colors[i]
+	      }
+	    }
+		}
+    return ''; // transparent
+  }
 
 	// eslint-disable-next-line complexity
 	private _fillPrecalculatedCache(pixelRatio: number): void {

@@ -10,8 +10,9 @@ import { isInteger, merge } from '../helpers/strict-type-checks';
 import { SeriesAreaPaneView } from '../views/pane/area-pane-view';
 import { SeriesBarsPaneView } from '../views/pane/bars-pane-view';
 import { SeriesCandlesticksPaneView } from '../views/pane/candlesticks-pane-view';
-import { SeriesHeatmapPaneView } from '../views/pane/heatmap-pane-view';
 import { SeriesHistogramPaneView } from '../views/pane/histogram-pane-view';
+import { SeriesHeatmapPaneView } from '../views/pane/heatmap-pane-view';
+import { SeriesFootprintsPaneView } from '../views/pane/footprints-pane-view';
 import { IPaneView } from '../views/pane/ipane-view';
 import { IUpdatablePaneView } from '../views/pane/iupdatable-pane-view';
 import { SeriesLinePaneView } from '../views/pane/line-pane-view';
@@ -83,10 +84,11 @@ export interface MarkerData {
 export interface SeriesDataAtTypeMap {
 	Bar: BarPrices;
 	Candlestick: BarPrices;
-	Heatmap: BarPrice;
 	Area: BarPrice;
 	Line: BarPrice;
 	Histogram: BarPrice;
+	Heatmap: BarPrice;
+	Footprint: BarPrice;
 }
 
 // TODO: uncomment following strings after fixing typescript bug
@@ -595,13 +597,18 @@ export class Series<T extends SeriesType = SeriesType> extends PriceDataSource i
 				break;
 			}
 
+			case 'Histogram': {
+				this._paneView = new SeriesHistogramPaneView(this as Series<'Histogram'>, this.model());
+				break;
+			}
+
 			case 'Heatmap': {
 				this._paneView = new SeriesHeatmapPaneView(this as Series<'Heatmap'>, this.model());
 				break;
 			}
 
-			case 'Histogram': {
-				this._paneView = new SeriesHistogramPaneView(this as Series<'Histogram'>, this.model());
+			case 'Footprint': {
+				this._paneView = new SeriesFootprintsPaneView(this as Series<'Footprint'>, this.model());
 				break;
 			}
 

@@ -8,9 +8,10 @@ import {
 	AreaSeriesPartialOptions,
 	BarSeriesPartialOptions,
 	CandlestickSeriesPartialOptions,
-	HeatmapSeriesPartialOptions,
 	HistogramSeriesPartialOptions,
 	LineSeriesPartialOptions,
+	HeatmapSeriesPartialOptions,
+	FootprintSeriesPartialOptions,
 	SeriesType,
 } from '../model/series-options';
 import { BusinessDay, UTCTimestamp } from '../model/time-data';
@@ -48,14 +49,6 @@ export interface IChartApi {
 	 */
 	resize(width: number, height: number, forceRepaint?: boolean): void;
 
-	/**
-	 * Creates an heatmap area series with specified parameters
-	 *
-	 * @param areaOptions - customization parameters of the series being created
-	 * @returns an interface of the created series
-	 */
-	addHeatmapSeries(areaOptions?: HeatmapSeriesPartialOptions): ISeriesApi<'Heatmap'>;
-	
 	/**
 	 * Creates an area series with specified parameters
 	 *
@@ -95,6 +88,22 @@ export interface IChartApi {
 	 * @returns an interface of the created series
 	 */
 	addLineSeries(lineOptions?: LineSeriesPartialOptions): ISeriesApi<'Line'>;
+
+	/**
+	 * Creates an heatmap area series with specified parameters
+	 *
+	 * @param areaOptions - customization parameters of the series being created
+	 * @returns an interface of the created series
+	 */
+	addHeatmapSeries(areaOptions?: HeatmapSeriesPartialOptions): ISeriesApi<'Heatmap'>;
+
+	/**
+	 * Creates an heatmap area series with specified parameters
+	 *
+	 * @param areaOptions - customization parameters of the series being created
+	 * @returns an interface of the created series
+	 */
+	addFootprintSeries(areaOptions?: FootprintSeriesPartialOptions): ISeriesApi<'Footprint'>;
 
 	/**
 	 * Removes a series of any type. This is an irreversible operation, you cannot do anything with the series after removing it

@@ -2,7 +2,7 @@ import { isNumber, isString } from '../helpers/strict-type-checks';
 
 import { Series } from '../model/series';
 import { SeriesType } from '../model/series-options';
-import { HeatmapPlotRowItem } from '../model/series-data';
+import { HeatmapPlotRowItem, FootprintPlotRowItem } from '../model/series-data';
 import { BusinessDay, UTCTimestamp } from '../model/time-data';
 
 
@@ -36,6 +36,16 @@ export interface LineData {
 }
 
 /**
+ * Structure describing a single item of data for histogram series
+ */
+export interface HistogramData extends LineData {
+	/**
+	 * Optional color value for certain data item. If missed, color from HistogramSeriesOptions is used
+	 */
+	color?: string;
+}
+
+/**
  * Structure describing single data item for series of type Line or Area
  */
 export interface HeatmapData {
@@ -46,13 +56,16 @@ export interface HeatmapData {
 }
 
 /**
- * Structure describing a single item of data for histogram series
+ * Structure describing single data item for series of type Line or Area
  */
-export interface HistogramData extends LineData {
-	/**
-	 * Optional color value for certain data item. If missed, color from HistogramSeriesOptions is used
-	 */
-	color?: string;
+export interface FootprintData {
+	time: Time;
+
+	open: number;
+	high: number;
+	low: number;
+	close: number;
+	values: FootprintPlotRowItem[];
 }
 
 export interface BarData {
@@ -78,9 +91,10 @@ export interface SeriesDataItemTypeMap {
 	Bar: BarData | WhitespaceData;
 	Candlestick: BarData | WhitespaceData;
 	Area: LineData | WhitespaceData;
-	Heatmap: HeatmapData | WhitespaceData;
 	Line: LineData | WhitespaceData;
 	Histogram: HistogramData | WhitespaceData;
+	Heatmap: HeatmapData | WhitespaceData;
+	Footprint: FootprintData | WhitespaceData;
 }
 
 export interface DataUpdatesConsumer<TSeriesType extends SeriesType> {

@@ -18,8 +18,12 @@ import { SeriesPaneViewBase } from './series-pane-view-base';
 
 function createEmptyHeatmapData(barSpacing: number): PaneRendererHeatmapData {
 	return {
-		items: [],
 		barSpacing,
+		blockSizeY: NaN,
+		colors: [],
+		thresholds: [],
+		items: [],
+		alpha: 1,
 		visibleRange: null,
 	};
 }
@@ -53,8 +57,13 @@ export class SeriesHeatmapPaneView extends SeriesPaneViewBase<'Heatmap', TimedVa
 
 	protected _fillRawPoints(): void {
 		const barSpacing = this._model.timeScale().barSpacing();
+		const heatmapStyleProps = this._series.options();
 
 		this._heatmapData = createEmptyHeatmapData(barSpacing);
+		this._heatmapData.blockSizeY = heatmapStyleProps.blockSizeY;
+		this._heatmapData.colors = heatmapStyleProps.colors;
+		this._heatmapData.thresholds = heatmapStyleProps.thresholds;
+		this._heatmapData.alpha = heatmapStyleProps.alpha;
 
 		let targetIndex = 0;
 		let itemIndex = 0;
@@ -63,8 +72,8 @@ export class SeriesHeatmapPaneView extends SeriesPaneViewBase<'Heatmap', TimedVa
 			const item = createRawItem(row.index, row);
 			item.values = row.values.map(x => {
 				return {
-					price: x.value as BarPrice,
-					color: x.color, // as string,
+					price: x.price as BarPrice,
+					value: x.value,
 					y: NaN as Coordinate
 				}
 			})
@@ -99,7 +108,24 @@ export class SeriesHeatmapPaneView extends SeriesPaneViewBase<'Heatmap', TimedVa
 		const visibleBars = ensureNotNull(timeScale.visibleStrictRange());
 
 		timeScale.indexesToCoordinates(this._heatmapData.items);
+
+		// Condense and scale values
 		for (const item of this._heatmapData.items) {
+			// console.log(item.values)
+			//
+			// const condensedValues = {}
+			// item.values.forEach(val => {
+			// 	val.y = roundNearest(val.y, this._heatmapData.blockSizeY)
+			// 	if (!condensedValues[val.y]) {
+			// 		condensedValues[val.y] = val.size
+			// 	}
+			// 	else {
+			// 		condensedValues[val.y] += val.size
+			// 	}
+			// })
+			//
+			// // values: HeatmapPlotRowItem[];
+
 			priceScale.pointsArrayToCoordinates(item.values, firstValue);
 		}
 		this._heatmapData.visibleRange = visibleTimedValues(this._heatmapData.items, visibleBars, false);
