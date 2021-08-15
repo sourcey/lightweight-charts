@@ -26,7 +26,7 @@ export class SeriesFootprintsPaneView extends BarsPaneViewBase<'Footprint', Foot
 			return null;
 		}
 
-		const footprintStyleProps = this._series.options();
+		const styleProps = this._series.options();
 
 		this._makeValid();
 		const data: PaneRendererFootprintsData = {
@@ -34,23 +34,30 @@ export class SeriesFootprintsPaneView extends BarsPaneViewBase<'Footprint', Foot
 			barSpacing: this._model.timeScale().barSpacing(),
 			visibleRange: this._itemsVisibleRange,
 
-			alignEdges: footprintStyleProps.alignEdges,
+			alignEdges: styleProps.alignEdges,
 
 			// Candlestick
-			candleWickVisible: footprintStyleProps.candleWickVisible,
-			candleBorderVisible: footprintStyleProps.candleBorderVisible,
-			candleBodyVisible: footprintStyleProps.candleBodyVisible,
+			candleWickVisible: styleProps.candleWickVisible,
+			candleBorderVisible: styleProps.candleBorderVisible,
+			candleBodyVisible: styleProps.candleBodyVisible,
 
 			// Cluster
-			clusterVisible: footprintStyleProps.clusterVisible,
-			clusterColor: footprintStyleProps.clusterColor,
-			clusterTextColor: footprintStyleProps.clusterTextColor,
-			clusterTextType: footprintStyleProps.clusterTextType,
-			clusterType: footprintStyleProps.clusterType,
-			clusterSizeY: footprintStyleProps.clusterSizeY,
-			clusterBuyColors: footprintStyleProps.clusterBuyColors,
-			clusterSellColors: footprintStyleProps.clusterSellColors,
-			clusterThresholds: footprintStyleProps.clusterThresholds,
+			clusterVisible: styleProps.clusterVisible,
+			clusterColor: styleProps.clusterColor,
+			clusterTextColors: styleProps.clusterTextColors,
+			clusterTextType: styleProps.clusterTextType,
+			clusterType: styleProps.clusterType,
+			clusterSizeY: styleProps.clusterSizeY,
+			clusterBuyColors: styleProps.clusterBuyColors,
+			clusterSellColors: styleProps.clusterSellColors,
+			clusterThresholds: styleProps.clusterThresholds,
+
+			// Volume Profile
+			volumeProfileTextColor: styleProps.volumeProfileTextColor,
+			volumeProfileBuyColor: styleProps.volumeProfileBuyColor,
+			volumeProfileSellColor: styleProps.volumeProfileSellColor,
+			volumeProfilePocColor: styleProps.volumeProfilePocColor,
+			volumeProfilePocExtend: styleProps.volumeProfilePocExtend
 		};
 
 		this._renderer.setData(data);
@@ -70,19 +77,19 @@ export class SeriesFootprintsPaneView extends BarsPaneViewBase<'Footprint', Foot
 	protected _convertToCoordinates(priceScale: PriceScale, timeScale: TimeScale, firstValue: number): void {
 		timeScale.indexesToCoordinates(this._items, undefinedIfNull(this._itemsVisibleRange));
 		priceScale.barPricesToCoordinates(this._items, firstValue, undefinedIfNull(this._itemsVisibleRange));
-		// super._convertToCoordinates(priceScale, timeScale, firstValue);
 		priceScale.barBandsToCoordinates(this._items, firstValue, undefinedIfNull(this._itemsVisibleRange));
 	}
 
 	protected _fillRawPoints(): void {
 		const colorer = this._series.barColorer();
-		const footprintStyleProps = this._series.options();
+		const styleProps = this._series.options();
 
+		// console.log('_fillRawPoints', this._series.bars().rows().length)
 		this._items = this._series.bars().rows().map((row: SeriesPlotRow<'Footprint'>) => {
 			const item = this._createRawItem(row.index, row, colorer);
 			// barPriceToCoordinates
-			item.upper = roundUp(item.high, footprintStyleProps.clusterSizeY) as BarPrice;
-			item.lower = roundDown(item.low , footprintStyleProps.clusterSizeY) as BarPrice;
+			item.upper = roundUp(item.high, styleProps.clusterSizeY) as BarPrice;
+			item.lower = roundDown(item.low , styleProps.clusterSizeY) as BarPrice;
 			item.values = row.values;
 			return item
 		});
@@ -104,8 +111,8 @@ export class SeriesFootprintsPaneView extends BarsPaneViewBase<'Footprint', Foot
 
 
 			// barPriceToCoordinates
-			// item.upper = roundUp(item.high, footprintStyleProps.clusterSizeY) as BarPrice;
-			// item.lower = roundDown(item.low , footprintStyleProps.clusterSizeY) as BarPrice;
+			// item.upper = roundUp(item.high, styleProps.clusterSizeY) as BarPrice;
+			// item.lower = roundDown(item.low , styleProps.clusterSizeY) as BarPrice;
 			values: [],
 		};
 	}

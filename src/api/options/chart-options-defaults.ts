@@ -45,6 +45,7 @@ export const chartOptionsDefaults: ChartOptionsInternal = {
 		},
 		axisDoubleClickReset: true,
 		mouseWheel: true,
+		mouseWheelScalePrice: true,
 		pinch: true,
 	},
 };

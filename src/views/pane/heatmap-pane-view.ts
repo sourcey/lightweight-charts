@@ -19,6 +19,7 @@ import { SeriesPaneViewBase } from './series-pane-view-base';
 function createEmptyHeatmapData(barSpacing: number): PaneRendererHeatmapData {
 	return {
 		barSpacing,
+		priceVisibleRange: [],
 		blockSizeY: NaN,
 		colors: [],
 		thresholds: [],
@@ -57,6 +58,7 @@ export class SeriesHeatmapPaneView extends SeriesPaneViewBase<'Heatmap', TimedVa
 
 	protected _fillRawPoints(): void {
 		const barSpacing = this._model.timeScale().barSpacing();
+		const priceRange = this._series.priceScale().priceRange();
 		const heatmapStyleProps = this._series.options();
 
 		this._heatmapData = createEmptyHeatmapData(barSpacing);
@@ -65,18 +67,24 @@ export class SeriesHeatmapPaneView extends SeriesPaneViewBase<'Heatmap', TimedVa
 		this._heatmapData.thresholds = heatmapStyleProps.thresholds;
 		this._heatmapData.alpha = heatmapStyleProps.alpha;
 
+		if (priceRange) {
+			this._heatmapData.priceVisibleRange = [priceRange.minValue(), priceRange.maxValue()];
+		}
+
 		let targetIndex = 0;
 		let itemIndex = 0;
 
 		for (const row of this._series.bars().rows()) {
 			const item = createRawItem(row.index, row);
-			item.values = row.values.map(x => {
-				return {
-					price: x.price as BarPrice,
-					value: x.value,
-					y: NaN as Coordinate
-				}
-			})
+			if (row.values && row.values.length) {
+				item.values = row.values.map(x => {
+					return {
+						price: x.price as BarPrice,
+						value: x.value,
+						y: NaN as Coordinate
+					}
+				});				
+			}
 
 			targetIndex++;
 			if (targetIndex < this._heatmapData.items.length) {

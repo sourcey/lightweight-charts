@@ -173,4 +173,15 @@ export class SeriesApi<TSeriesType extends SeriesType> implements ISeriesApi<TSe
 	public seriesType(): TSeriesType {
 		return this._series.seriesType();
 	}
+
+	public setZorder(order: number): void {
+		// Unlike CSS z-index negative numbers are used to denote the internal order,
+		// the lower the futher back ie. 0 (front), -1 (middle), -2 (back).
+
+		this._series.setZorder(order);
+		const pane = this._series.model().paneForSource(this._series);
+		if (pane) {
+			pane.invalidateCachedOrderedSources();
+		}
+	}
 }

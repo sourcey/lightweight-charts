@@ -78,7 +78,7 @@ export interface TimeScaleOptions {
 	timeVisible: boolean;
 	secondsVisible: boolean;
 	shiftVisibleRangeOnNewBar: boolean;
-	scrollFromCenter:  boolean;
+	scrollFromCenter: boolean;
 	tickMarkFormatter?: TickMarkFormatter;
 }
 
@@ -645,7 +645,7 @@ export class TimeScale {
 			return this._localizationOptions.timeFormatter(time.businessDay || time.timestamp);
 		}
 
-		return this._dateTimeFormatter.format(new Date(time.timestamp * 1000));
+		return this._dateTimeFormatter.format(new Date(time.timestamp)); // * 1000
 	}
 
 	private _firstIndex(): TimePointIndex | null {

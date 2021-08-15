@@ -37,7 +37,7 @@ export function defaultTickMarkFormatter(timePoint: TimePoint, tickMarkType: Tic
 	}
 
 	const date = timePoint.businessDay === undefined
-		? new Date(timePoint.timestamp * 1000)
+		? new Date(timePoint.timestamp) // * 1000
 		: new Date(Date.UTC(timePoint.businessDay.year, timePoint.businessDay.month - 1, timePoint.businessDay.day));
 
 	// from given date we should use only as UTC date or timestamp

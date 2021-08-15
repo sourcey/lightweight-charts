@@ -28,7 +28,7 @@ function businessDayConverter(time: Time): TimePoint {
 	const date = new Date(Date.UTC(time.year, time.month - 1, time.day, 0, 0, 0, 0));
 
 	return {
-		timestamp: Math.round(date.getTime() / 1000) as UTCTimestamp,
+		timestamp: Math.round(date.getTime()) as UTCTimestamp, // / 1000
 		businessDay: time,
 	};
 }

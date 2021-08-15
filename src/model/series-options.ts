@@ -102,14 +102,20 @@ export interface FootprintStyleOptions { // extends CandlestickStyleOptions
 	candleBodyVisible: boolean;
 
 	clusterVisible: boolean;
-	clusterColor: string;
-	clusterTextColor: string;
-	clusterTextType: string;
 	clusterType: string;
 	clusterSizeY: number;
+	clusterColor: string;
+	clusterTextType: string;
+	clusterTextColors: Array<string>;
 	clusterBuyColors: Array<string>;
 	clusterSellColors: Array<string>;
 	clusterThresholds: Array<number>;
+
+	volumeProfileTextColor: string;
+	volumeProfileBuyColor: string;
+	volumeProfileSellColor: string;
+	volumeProfilePocColor: string;
+	volumeProfilePocExtend: boolean;
 }
 
 /**

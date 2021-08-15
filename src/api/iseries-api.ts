@@ -124,4 +124,11 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 	 * @returns this `SeriesType`
 	 */
 	seriesType(): TSeriesType;
+
+	/**
+	 * Sets the zOrder of the series
+	 *
+	 * @param order - order number
+	 */
+	setZorder(order: number): void;
 }

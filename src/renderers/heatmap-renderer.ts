@@ -10,6 +10,7 @@ export type HeatmapItem = TimedValue & HeatmapPricedValue;
 export interface PaneRendererHeatmapData {
 	items: HeatmapItem[];
 
+	priceVisibleRange: Array<number>;
 	barSpacing: number;
 	colors: Array<string>;
 	thresholds: Array<number>;
@@ -49,6 +50,12 @@ export class PaneRendererHeatmap implements IPaneRenderer {
 			const current = this._precalculatedCache[i - this._data.visibleRange.from];
 
 			for (const value of item.values) {
+				if (this._data.priceVisibleRange.length &&
+					(value.price < this._data.priceVisibleRange[0] ||
+						value.price > this._data.priceVisibleRange[1])) {
+					continue;
+				}
+
 				const highY = Math.round(value.y * pixelRatio);
 				const lowY = highY;
 				const top = highY + (this._data.blockSizeY / 2);

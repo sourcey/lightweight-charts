@@ -433,18 +433,20 @@ export class ChartWidget implements IDestroyable {
 			this.model().zoomTime(scrollPosition as Coordinate, zoomScale);
 
 			// Custom behaviour: scale price and time on mouse wheel
-			const defaultPriceScale = this.model().findPriceScale(this.model().defaultVisiblePriceScaleId())
-			if (defaultPriceScale) {
-				const priceScale = defaultPriceScale.priceScale;
-				const priceRange = priceScale.priceRange()
-				if (priceRange) {
-					priceScale.setMode({
-						autoScale: false,
-					});
+			if (this._options.handleScale.mouseWheelScalePrice) {
+				const defaultPriceScale = this.model().findPriceScale(this.model().defaultVisiblePriceScaleId())
+				if (defaultPriceScale) {
+					const priceScale = defaultPriceScale.priceScale;
+					const priceRange = priceScale.priceRange()
+					if (priceRange) {
+						priceScale.setMode({
+							autoScale: false,
+						});
 
-					const newPriceRange = ensureNotNull(priceRange).clone();
-					newPriceRange.scaleAroundCenter(zoomScale > 0 ? 0.9 : 1.1);
-					priceScale.setPriceRange(newPriceRange);
+						const newPriceRange = ensureNotNull(priceRange).clone();
+						newPriceRange.scaleAroundCenter(zoomScale > 0 ? 0.9 : 1.1);
+						priceScale.setPriceRange(newPriceRange);
+					}
 				}
 			}
 		}

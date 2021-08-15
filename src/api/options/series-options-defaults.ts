@@ -92,11 +92,17 @@ export const footprintStyleDefaults: FootprintStyleOptions = {
 
 	// Cluster defaults
 	clusterVisible: true,
-	clusterColor: 'rgba(15, 10, 30, 0.8)',
-	clusterTextColor: '#ffffff',
-	clusterTextType: 'bid-ask',
 	clusterType: 'cluster',
-	clusterSizeY: 5,
+	clusterSizeY: 1,
+	clusterColor: 'rgba(15, 10, 30, 0.8)',
+	clusterTextType: 'bid-ask',
+	clusterTextColors: [
+		'#ffffff',
+		'#ffffff ',
+		'#ffffff',
+		'#ffffff',
+		'#ffffff',
+	],
 	clusterBuyColors: [
 		'#CFEAFA',
 		'#9FD0F1 ',
@@ -117,7 +123,13 @@ export const footprintStyleDefaults: FootprintStyleOptions = {
 		8000000,      // $8,000,000
 		10000000,     // $10,000,000
 		15000000,     // $15,000,000
-	]
+	],
+
+	volumeProfileTextColor: '#fff',
+	volumeProfileBuyColor: '#85ABF0',
+	volumeProfileSellColor: '#BF4545',
+	volumeProfilePocColor: '#D60000', //'#FF3B64', //
+	volumeProfilePocExtend: true
 };
 
 export const seriesOptionsDefaults: SeriesOptionsCommon = {

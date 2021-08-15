@@ -146,7 +146,7 @@ export class SeriesBarColorer {
 		// candleBodyVisible: boolean;
 		//
 		// clusterColor: string;
-		// clusterTextColor: string;
+		// clusterTextColors: string;
 		// clusterTextType: string;
 		// clusterType: string;
 		// clusterSizeY: number;

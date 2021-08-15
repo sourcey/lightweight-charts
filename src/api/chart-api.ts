@@ -72,6 +72,7 @@ function migrateHandleScaleScrollOptions(options: DeepPartial<ChartOptions>): vo
 				price: handleScale,
 			},
 			mouseWheel: handleScale,
+			mouseWheelScalePrice: handleScale,
 			pinch: handleScale,
 		};
 	} else if (options.handleScale !== undefined && isBoolean(options.handleScale.axisPressedMouseMove)) {

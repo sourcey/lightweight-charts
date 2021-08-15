@@ -326,6 +326,10 @@ export class Pane implements IDestroyable {
 		return this._grid;
 	}
 
+	public invalidateCachedOrderedSources(): void {
+		this._cachedOrderedSources = null;
+	}
+
 	private _recalculatePriceScaleImpl(priceScale: PriceScale): void {
 		// TODO: can use this checks
 		const sourceForAutoScale = priceScale.sourcesForAutoScale();

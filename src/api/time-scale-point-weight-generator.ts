@@ -32,8 +32,8 @@ const intradayWeightDivisors: WeightDivisor[] = [
 
 function weightByTime(time: UTCTimestamp, prevTime: UTCTimestamp | null): number {
 	if (prevTime !== null) {
-		const prevDate = new Date(prevTime * 1000);
-		const currentDate = new Date(time * 1000);
+		const prevDate = new Date(prevTime); // * 1000
+		const currentDate = new Date(time); // * 1000
 
 		if (currentDate.getUTCFullYear() !== prevDate.getUTCFullYear()) {
 			return 70;
